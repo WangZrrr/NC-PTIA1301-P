@@ -1,6 +1,10 @@
 package numbers;
 
+import java.util.Random;
+
 public class NewNumbersMain {
+    private static final Random RANDOM_GENERATOR = new Random(50);
+
     /**
      * Task 0: Update the project:
      *          - From menu: Git / "Update Project...", OR
@@ -15,7 +19,7 @@ public class NewNumbersMain {
      * Call this method and print the return value in main.
      */
     public static void main(String[] args) {
-        int[] array = generateArray();
+        int[] array = generateArray(true);
 
         System.out.println(array.length);
         System.out.println(array);
@@ -28,11 +32,32 @@ public class NewNumbersMain {
                 System.out.print(", ");
             }
         }
+
+        System.out.println();
+
+        int[][] array2 = generateTwoDimensionalArray(false);
+        System.out.println(array2.length);
+        System.out.println(array2[0].length);
+        System.out.println();
+        for (int i = 0; i < array2.length; i++) {
+            System.out.print((i + 1) + " row: ");
+            for (int j = 0; j < array2[i].length; j++) {
+                System.out.print(array2[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
     }
 
-    public static int[] generateArray() {
+    public static int[] generateArray(boolean random) {
         //int[] array = new int[5];
         int[] array = {1, 2, 3, 4, 5};
+        if (random) {
+            for (int i = 0; i < array.length; i++) {
+                array[i] = RANDOM_GENERATOR.nextInt(100) - 50; // you will get values from -50 to 50
+                //RANDOM_GENERATOR.nextInt() % 100 - 50; - another option
+            }
+        }
         return array;
     }
 
@@ -56,6 +81,21 @@ public class NewNumbersMain {
      *     4 5 6
      * Call this method and print the return value in main.
      */
+    public static int[][] generateTwoDimensionalArray(boolean random) {
+        //int[][] result = new int[2][3];
+        int[][] result = {
+                {1, 2, 3},
+                {4, 5, 6}
+        };
+        if (random) {
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++) {
+                    result[i][j] = RANDOM_GENERATOR.nextInt(100) - 50;
+                }
+            }
+        }
+        return result;
+    }
 
     /**
      * Task 4: Create a generateList(random, length) method to generate
