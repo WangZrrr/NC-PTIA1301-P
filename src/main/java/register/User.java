@@ -16,15 +16,28 @@ public class User {
     private String name;
     private int birthYear;
     private String address;
+    private final EyeColor eyeColor;
 
     public User() {
-        this("John Doe", 2000, "Baker Street");
+        this("John Doe", 2000, "Baker Street", EyeColor.BROWN);
     }
 
     public User(String name, int birthYear, String address) {
         this.name = name;
         this.birthYear = birthYear;
         this.address = address;
+        eyeColor = EyeColor.BROWN;
+    }
+
+    public User(String name, int birthYear, String address, EyeColor eyeColor) {
+        this.name = name;
+        this.birthYear = birthYear;
+        this.address = address;
+        this.eyeColor = eyeColor;
+    }
+
+    public EyeColor getEyeColor() {
+        return eyeColor;
     }
 
     public String getName() {

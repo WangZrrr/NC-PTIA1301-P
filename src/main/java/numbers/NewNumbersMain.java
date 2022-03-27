@@ -1,5 +1,7 @@
 package numbers;
 
+import javax.print.attribute.standard.PresentationDirection;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class NewNumbersMain {
@@ -35,7 +37,7 @@ public class NewNumbersMain {
 
         System.out.println();
 
-        int[][] array2 = generateTwoDimensionalArray(false);
+        int[][] array2 = generateTwoDimensionalArray(true);
         System.out.println(array2.length);
         System.out.println(array2[0].length);
         System.out.println();
@@ -47,6 +49,45 @@ public class NewNumbersMain {
             }
             System.out.println();
         }
+
+        System.out.println();
+
+        ArrayList<Integer> list = generateList(true, 5);
+        System.out.println(list.size()); // get back the length of the list
+        int max = list.get(0);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) > max) {
+                max = list.get(i);
+            }
+        }
+        System.out.println("Maximum of the list is " + max);
+        System.out.println(list); // print the whole list
+        list.add(6); // adding the value of 6 to the list
+        list.remove(5); // remove the value from the position 5 of the list
+        list.set(0, 10); // change the first value to 10
+        System.out.println(list);
+        System.out.println(list.contains(60));
+        System.out.println(list.indexOf(60));
+        System.out.println(list.indexOf(10));
+
+        System.out.println();
+
+        System.out.println(getMaximumOfATwoDimensionalArray(array2));
+    }
+
+    public static int getMaximumOfATwoDimensionalArray(int[][] array) {
+        int max = 0;
+        if (array.length > 0 && array[0].length > 0) {
+            max = array[0][0]; // needed because of case when array contains only negative numbers
+            for (int i = 0; i < array.length; i++) {
+                for (int j = 0; j < array[i].length; j++) {
+                    if (array[i][j] > max) {
+                        max = array[i][j];
+                    }
+                }
+            }
+        }
+        return max;
     }
 
     public static int[] generateArray(boolean random) {
@@ -103,9 +144,22 @@ public class NewNumbersMain {
      * - If the value of random parameter is true, then return with a list of random numbers.
      *   The length of this list has to match with length parameter.
      * - If the value of random parameter is false,
-     *   then return with an array with the numbers from 1 to value of length parameter.
+     *   then return with a list with the numbers from 1 to value of length parameter.
      * Hint: Use ArrayList.
      */
+    public static ArrayList<Integer> generateList(boolean random, int length) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if (random) {
+            for (int i = 0; i < length; i++) {
+                list.add(RANDOM_GENERATOR.nextInt(100) - 50);
+            }
+        } else {
+            for (int i = 0; i < length; i++) {
+                list.add(1 + i);
+            }
+        }
+        return list;
+    }
 
     /**
      * Task 5: Create a print method to print all element of a list parameter to the console.
@@ -119,6 +173,27 @@ public class NewNumbersMain {
      * Call this method in main and print a message with the length of subset list or
      * the static "There are no even number in the list" message.
      */
+
+    public static ArrayList<Integer> selectEvenNumbers(ArrayList<Integer> list) {
+        ArrayList<Integer> sublist = new ArrayList<>();
+        for (int number : list) {
+            if (number % 2 == 0) {
+                sublist.add(number);
+            }
+        }
+        return sublist;
+    }
+    public static ArrayList<Integer> selectEvenNumbers(int[][] array) {
+        ArrayList<Integer> sublist = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (array[i][j] % 2 == 0) {
+                    sublist.add(array[i][j]);
+                }
+            }
+        }
+        return sublist;
+    }
 
     /**
      * Task 7: Create an intersection method, what get 2 lists as parameters.
@@ -159,11 +234,23 @@ public class NewNumbersMain {
      */
 
     /**
-     * Task 12: Create a indexOf(array, value) method to return the index of value in a list.
+     * Task 12: Create an indexOf(array, value) method to return the index of value in a list.
      * If the list does not contain the value, then return with -1.
      * Extra: Create same method for 1- and 2-dimensional arrays.
      * Extra: Create same method for lists and arrays with double values.
      */
+    public static int[] indexOf(int[][] array, int value) {
+        int[] result = {-1, -1};
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (array[i][j] == value) {
+                    result[0] = i;
+                    result[1] = j;
+                }
+            }
+        }
+        return result;
+    }
 
     /**
      * Task 13: Create a union method, what get 2 lists as parameters.
