@@ -38,6 +38,51 @@ public class XmlReader {
      * Hint: To print you can override the toString method of User class.
      */
 
+    public static ArrayList<User> readUsersFromXml(String filepath) {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(new FileInputStream(filepath));
+
+            Element rootElement = document.getDocumentElement();
+            /*System.out.println("The tag name of root element: " + rootElement.getNodeName());
+            System.out.println("The node type of root element: " + rootElement.getNodeType());
+            System.out.println("The node type of element nodes: " + Node.ELEMENT_NODE);
+            System.out.println("The node type of text nodes: " + Node.TEXT_NODE);*/
+
+            NodeList childsOfRootElement = rootElement.getChildNodes();
+            //System.out.println("The number of child nodes of root element: " + childsOfRootElement.getLength());
+            for (int i = 0; i < childsOfRootElement.getLength(); i++) {
+                Node childNode = childsOfRootElement.item(i);  // get a child node object
+                /*System.out.println(i + ". child node: node type is " + childNode.getNodeType()
+                                     + ", tag name is " + childNode.getNodeName());*/
+                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                    NodeList childsOfUserTag = childNode.getChildNodes();  // get all child nodes of a user tag
+                    String name = "";
+                    int birthYear = 0;
+                    String address = "";
+                    EyeColor eyeColor = EyeColor.BROWN;
+                    for (int j = 0; j < childsOfUserTag.getLength(); j++) {
+                        Node childNodeOfUserTag = childsOfUserTag.item(j);
+                        if (childNodeOfUserTag.getNodeType() == Node.ELEMENT_NODE) {
+                            switch (childNodeOfUserTag.getNodeName()) {
+                                case "name" -> name = childNodeOfUserTag.getTextContent();
+                                case "birthYear" -> birthYear = Integer.parseInt(childNodeOfUserTag.getTextContent());
+                                case "address" -> address = childNodeOfUserTag.getTextContent();
+                                case "eyeColor" -> eyeColor = EyeColor.valueOf(childNodeOfUserTag.getTextContent());
+                            }
+                        }
+                    }
+                    users.add(new User(name, birthYear, address, eyeColor));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     /**
      * Task 2:
      * Create a numberOfOccurrence(filepath, tagName) method to:

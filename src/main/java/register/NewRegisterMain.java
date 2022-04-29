@@ -1,5 +1,10 @@
 package register;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.util.ArrayList;
+
 public class NewRegisterMain {
     /**
      * Task 0: Update the project:
@@ -23,6 +28,20 @@ public class NewRegisterMain {
      *              - Peter Parker, 2001, 20 Ingram Street, New York
      *          - Print the list
      */
+    public static void main(String[] args) {
+        ArrayList<User> users = new ArrayList<>();
+        User tony = new User("Tony Stark", 1970, "10880 Malibu Point, Malibu");
+        users.add(tony);
+        users.add(new User("Stephen Strange", 1930, "177A Bleecker Street, New York City"));
+        users.add(new User("Steve Rogers", 1918, "569 Leaman Place, Brooklyn"));
+        System.out.println(users);
+        //users.remove(0);
+        //users.remove(tony);
+        users.remove(users.get(0));
+        System.out.println(users);
+        users.add(1, new User("Peter Parker", 2001, "20 Ingram Street, New York"));
+        System.out.println(users);
+    }
 
     /**
      * Task 2: Create a printList method to print the name of users in the list:
@@ -33,6 +52,7 @@ public class NewRegisterMain {
      */
 
     /**
+     * //TODO: next time
      * Task 3: Create a writeUsersIntoFile method to save data of users into a file.
      * The method should get the list of users and the filepath.
      * Add a header to the file: Name;BirthYear;Address.
@@ -52,6 +72,30 @@ public class NewRegisterMain {
      * Hint: Use BufferedReader or FileInputStream to read from a file.
      * Hint: Take care about the header row.
      */
+    public static ArrayList<User> readUsersFromFile(String filepath) {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            /*
+            FileInputStream is = new FileInputStream(filepath);
+            while (is.available() > 0) {
+                is.read();
+                ...
+            }
+            is.close();
+             */
+            BufferedReader reader = new BufferedReader(new FileReader(filepath));
+            reader.readLine();
+            while (reader.ready()) {
+                String rowData = reader.readLine();
+                String[] data = rowData.split(";");
+                users.add(new User(data[0], Integer.parseInt(data[1]), data[2]));
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
 
     /**
      * Task 5: Create similar reader and writer methods to read and write Song objects.

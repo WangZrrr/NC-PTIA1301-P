@@ -18,10 +18,4 @@
         <address>569 Leaman Place, Brooklyn</address>
         <eyeColor>BLUE</eyeColor>
     </user>
-    <user>
-        <name>Kate</name>
-        <birthYear>2000</birthYear>
-        <address>Second Street</address>
-        <eyeColor>AMBER</eyeColor>
-    </user>
 </users>
