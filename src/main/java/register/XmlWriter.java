@@ -12,6 +12,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 // https://mkyong.com/java/how-to-create-xml-file-in-java-dom/
 
@@ -40,13 +42,107 @@ public class XmlWriter {
      * Hint: Create method to add elements to the hierarchy.
      */
 
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
         String filepath = "src/main/resources/users.xml";
         ArrayList<User> users = XmlReader.readUsersFromXml(filepath);
-        System.out.println(users);
+        //System.out.println(users);
         // menu system of the application with create, read, update and delete options
-        users.add(new User("Kate", 2000, "Second Street", EyeColor.AMBER));
+        int choice = -1;
+        while (choice != 0) {
+            System.out.println("1 - List users\r\n2 - Add new user\r\n3 - Modify user\r\n" +
+                                "4 - Delete user\r\n0 - Exit");
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+                if (choice < 0 || 4 < choice) {
+                    System.out.println("Not valid option.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Not valid option.");
+                scanner.nextLine();
+            }
+            switch (choice) {
+                case 1 -> System.out.println(users);
+                case 2 -> addNewUser(users);
+                case 3 -> modifyUser(users);
+                case 4 -> deleteUser(users);
+            }
+        }
+        //users.add(new User("Kate", 2000, "Second Street", EyeColor.AMBER));
         saveUsersToXml(users, filepath);
+    }
+
+    private static void addNewUser(ArrayList<User> users) {
+        System.out.print("Enter name of new user: ");
+        String name = scanner.nextLine();
+        int birthYear = readBirthYear();
+        System.out.print("Enter address of new user: ");
+        String address = scanner.nextLine();
+        EyeColor eyeColor = readEyeColor();
+        users.add(new User(name, birthYear, address, eyeColor));
+    }
+
+    private static void modifyUser(ArrayList<User> users) {
+        User user = findUserIn(users);
+        int birthYear = readBirthYear();
+        System.out.print("Enter address of user: ");
+        String address = scanner.nextLine();
+        EyeColor eyeColor = readEyeColor();
+        users.set(users.indexOf(user),
+                  new User(user.getName(), birthYear, address, eyeColor));
+    }
+
+    private static void deleteUser(ArrayList<User> users) {
+        users.remove(findUserIn(users));
+    }
+
+    private static User findUserIn(ArrayList<User> users) {
+        User user = new User();
+        String name = "";
+        while (name.isEmpty()) {
+            System.out.print("Enter name of user: ");
+            name = scanner.nextLine();
+            for (User userElement : users) {
+                if (userElement.getName().equals(name)) {
+                    return userElement;
+                }
+            }
+            name = "";
+        }
+        return user;
+    }
+
+    private static int readBirthYear() {
+        int birthYear = 0;
+        while (birthYear == 0) {
+            try {
+                System.out.print("Enter birth year of user: ");
+                birthYear = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("This is not a valid birth year. Please enter an integer.");
+                scanner.nextLine();
+            }
+        }
+        return birthYear;
+    }
+
+    private static EyeColor readEyeColor() {
+        EyeColor eyeColor = EyeColor.BROWN;
+        String rawInput = "";
+        while (rawInput.isEmpty()) {
+            try {
+                System.out.println("Enter eye color of user: ");
+                rawInput = scanner.nextLine();
+                eyeColor = EyeColor.valueOf(rawInput.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Not valid eye color.");
+                rawInput = "";
+            }
+        }
+        return eyeColor;
     }
 
     public static void saveUsersToXml(ArrayList<User> users, String filepath) {
